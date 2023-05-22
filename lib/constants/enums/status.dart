@@ -1,0 +1,3 @@
+enum Status{
+  success, error
+}
