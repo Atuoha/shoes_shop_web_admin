@@ -7,9 +7,8 @@ class RouteManager {
   static const String authScreen = "/auth";
   static const String forgotPasswordScreen = "/forgotPasswordScreen";
   static const String signupAcknowledgeScreen = "/signupAcknowledge";
-  static const String mainScreen = '/customerHomeScreen';
+  static const String mainScreen = '/homeScreen';
 
-  static const String sellerMainScreen = '/sellerMainScreen';
 }
 
 final routes = {
