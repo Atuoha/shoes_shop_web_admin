@@ -13,7 +13,7 @@ class AnimatedRail extends StatelessWidget {
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) => SizedBox(
-        height: 56,
+        height: 40,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           child: FloatingActionButton.extended(

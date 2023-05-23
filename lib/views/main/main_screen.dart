@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'products/products.dart';
+import 'vendors/vendors.dart';
 import '../../resources/assets_manager.dart';
 import '../../resources/styles_manager.dart';
-import '../widgets/animation_rail.dart';
+import '../widgets/are_you_sure_dialog.dart';
+import 'carousel_banners/carousel_banners.dart';
+import 'cash_outs/cash_outs.dart';
 import 'categories/categories.dart';
-import 'profile/profile.dart';
-import 'search/search.dart';
-import 'store/store.dart';
+import 'orders/orders.dart';
 import '../../constants/color.dart';
-import 'cart/cart.dart';
+
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -22,11 +24,12 @@ class _MainScreenState extends State<MainScreen> {
   bool isExtended = false;
   final List<Widget> _pages = const [
     HomeScreen(),
+    ProductScreen(),
+    OrdersScreen(),
+    VendorsScreen(),
     CategoriesScreen(),
-    StoreScreen(),
-    SearchScreen(),
-    CartScreen(),
-    ProfileScreen(),
+    CarouselBanners(),
+    CashOutScreen(),
   ];
 
   void setNewPage(int index) {
@@ -35,10 +38,24 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  // for navigation rail
   toggleIsExtended() {
     setState(() {
       isExtended = !isExtended;
     });
+  }
+
+  // logout
+  logout() {}
+
+  // logout dialog
+  logoutDialog() {
+    areYouSureDialog(
+      title: 'Logout',
+      content: 'Are you sure you want to logout',
+      context: context,
+      action: logout,
+    );
   }
 
   @override
@@ -46,12 +63,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         title: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(AssetManager.logo, width: 40),
+            Image.asset(AssetManager.logoTransparent, width: 40),
             RichText(
               text: TextSpan(
                 text: 'SHOES',
@@ -73,87 +90,104 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => logoutDialog(),
+            icon: const Icon(
+              Icons.logout,
+              color: accentColor,
+            ),
+          ),
+
+        ],
+        leading: IconButton(
+          onPressed: () => setState(() {
+            isExtended = !isExtended;
+          }),
+          icon: const Icon(
+            Icons.menu,
+            color: accentColor,
+          ),
+        ),
       ),
       body: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: NavigationRail(
-              selectedLabelTextStyle: const TextStyle(color: primaryColor),
-              unselectedIconTheme: const IconThemeData(color: greyFontColor),
-              unselectedLabelTextStyle: const TextStyle(color: greyFontColor),
-              onDestinationSelected: (index) => setState(() {
-                _pageIndex = index;
-              }),
-              // labelType: NavigationRailLabelType.selected,
-              leading: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: accentColor.withOpacity(0.2),
-                    backgroundImage: const AssetImage(
-                      AssetManager.avatar,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Leo Philip',
-                    style: getMediumStyle(color: accentColor),
-                  )
-                ],
-              ),
-              extended: isExtended,
-              selectedIconTheme: const IconThemeData(
-                size: 45,
-                color: primaryColor,
-              ),
-              trailing: AnimatedRail(
-                fnc: toggleIsExtended,
-                widget: isExtended
-                    ? Row(
+            padding: const EdgeInsets.all(0),
+            child: LayoutBuilder(builder: (context, constraint) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraint.maxHeight),
+                  child: IntrinsicHeight(
+                    child: NavigationRail(
+                      selectedLabelTextStyle:
+                          const TextStyle(color: primaryColor),
+                      unselectedIconTheme:
+                          const IconThemeData(color: greyFontColor, size: 18),
+                      unselectedLabelTextStyle:
+                          const TextStyle(color: greyFontColor),
+                      onDestinationSelected: (index) => setState(() {
+                        _pageIndex = index;
+                      }),
+                      labelType: NavigationRailLabelType.none,
+                      leading: Column(
                         children: [
-                          Icon(
-                            isExtended
-                                ? Icons.chevron_left
-                                : Icons.chevron_right,
+                          CircleAvatar(
+                            backgroundColor: accentColor.withOpacity(0.2),
+                            backgroundImage: const AssetImage(
+                              AssetManager.avatar,
+                            ),
                           ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            'Hide',
-                            style: TextStyle(color: Colors.white),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Leo Philip',
+                            style: getMediumStyle(color: accentColor),
                           )
                         ],
-                      )
-                    : IconButton(
-                        onPressed: () => setState(() {
-                          isExtended = !isExtended;
-                        }),
-                        icon: Icon(
-                          isExtended ? Icons.chevron_left : Icons.chevron_right,
-                        ),
                       ),
-              ),
-              destinations: const [
-                NavigationRailDestination(
-                  icon: Icon(
-                    Icons.home,
+                      extended: isExtended,
+                      selectedIconTheme: const IconThemeData(
+                        color: primaryColor,
+                      ),
+                      destinations: const [
+                        NavigationRailDestination(
+                          icon: Icon(
+                            Icons.dashboard_outlined,
+                          ),
+                          label: Text('Dashboard'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.shopping_bag_outlined),
+                          label: Text('Products'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.shopping_cart_checkout),
+                          label: Text('Orders'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.group_outlined),
+                          label: Text('Vendors'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.view_carousel),
+                          label: Text('Carousels'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.category_outlined),
+                          label: Text('Categories'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.monetization_on_outlined),
+                          label: Text('Cash outs'),
+                        ),
+                      ],
+                      selectedIndex: _pageIndex,
+                    ),
                   ),
-                  label: Text('Home'),
                 ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.person),
-                  label: Text('Profile'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.info),
-                  label: Text('About'),
-                ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.settings),
-                  label: Text('Settings'),
-                ),
-              ],
-              selectedIndex: _pageIndex,
-            ),
+              );
+            }),
           ),
           Expanded(child: _pages[_pageIndex])
         ],

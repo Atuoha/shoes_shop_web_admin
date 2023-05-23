@@ -60,7 +60,7 @@ ThemeData getLightTheme() {
         textStyle: getRegularStyle(
           color: Colors.white,
           fontSize: FontSize.s16,
-          fontWeight: FontWeightManager.bold,
+          fontWeight: FontWeightManager.normal,
         ),
       ),
     ),

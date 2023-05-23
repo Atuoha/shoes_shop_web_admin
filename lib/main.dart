@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shoes_shop_admin/resources/theme_manager.dart';
 import 'package:shoes_shop_admin/views/splash/entry.dart';
 import 'controllers/route_manager.dart';
 
@@ -18,6 +19,8 @@ class MyApp extends StatelessWidget {
       ),
     );
     return  MaterialApp(
+      theme: getLightTheme(),
+      title: 'Shoes Shop',
       debugShowCheckedModeBanner: false,
       home: const EntryScreen(),
       routes:routes,

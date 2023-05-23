@@ -2,7 +2,7 @@ class StringManager {
   static const String appName = "ShoesShop";
   static const String splashTitle1 = "Swift purchase";
   static const String splashSubtitle1 =
-      "A store house of shoes with easy purchase";
+      "A vendors house of shoes with easy purchase";
 
   static const String splashTitle2 = "Always filled";
   static const String splashSubtitle2 =
