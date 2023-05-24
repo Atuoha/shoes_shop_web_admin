@@ -13,10 +13,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-       ]
-    );
+    return Center(child: Text('Dashboard'));
   }
 }

@@ -5,9 +5,9 @@ class RouteManager {
   static const String entryScreen = "/entry_screen";
 
   static const String authScreen = "/auth";
-  static const String forgotPasswordScreen = "/forgotPasswordScreen";
-  static const String signupAcknowledgeScreen = "/signupAcknowledge";
-  static const String mainScreen = '/homeScreen';
+  static const String forgotPasswordScreen = "/forgot";
+  static const String signupAcknowledgeScreen = "/signup_acknowledge";
+  static const String mainScreen = '/home';
 
 }
 

@@ -27,8 +27,8 @@ class _MainScreenState extends State<MainScreen> {
     ProductScreen(),
     OrdersScreen(),
     VendorsScreen(),
-    CategoriesScreen(),
     CarouselBanners(),
+    CategoriesScreen(),
     CashOutScreen(),
   ];
 
@@ -189,7 +189,10 @@ class _MainScreenState extends State<MainScreen> {
               );
             }),
           ),
-          Expanded(child: _pages[_pageIndex])
+          Expanded(child: Padding(
+            padding:  EdgeInsets.only(top:MediaQuery.of(context).padding.top,left:18,right:18,),
+            child: _pages[_pageIndex],
+          ))
         ],
       ),
     );
