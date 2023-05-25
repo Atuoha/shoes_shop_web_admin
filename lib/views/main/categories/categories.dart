@@ -14,6 +14,7 @@ import '../../../resources/styles_manager.dart';
 import '../../../resources/values_manager.dart';
 import 'package:file_picker/file_picker.dart';
 
+import '../../widgets/are_you_sure_dialog.dart';
 import '../../widgets/kcool_alert.dart';
 import '../../widgets/msg_snackbar.dart';
 
@@ -65,7 +66,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     });
   }
 
-  Future<void> uploadImg() async {
+  // upload Category
+  Future<void> uploadCategory() async {
     //if category name is empty
     if (categoryName.text.isEmpty) {
       displaySnackBar(
@@ -105,6 +107,55 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         action: uploadDone,
       );
     }
+  }
+
+  // action after deleting
+  void doneDeleting() {
+    Navigator.of(context).pop();
+  }
+
+  // delete category
+  Future<void> deleteCategory(String id) async {
+    kCoolAlert(
+      message: 'Category is trying to delete',
+      context: context,
+      alert: CoolAlertType.loading,
+    );
+
+    try {
+      await _firebase
+          .collection('categories')
+          .doc(id)
+          .delete()
+          .whenComplete(() {
+        kCoolAlert(
+          message: 'Category deleted successfully',
+          context: context,
+          alert: CoolAlertType.success,
+          action: doneDeleting,
+        );
+      });
+    } catch (e) {
+      kCoolAlert(
+        message: 'Category not deleted successfully',
+        context: context,
+        alert: CoolAlertType.error,
+        action: doneDeleting,
+      );
+    }
+  }
+
+
+  // delete dialog
+  void deleteDialog({required String id}) {
+    areYouSureDialog(
+      title: 'Delete Category',
+      content: 'Are you sure you want to delete this category?',
+      context: context,
+      action: deleteCategory,
+      isIdInvolved: true,
+      id: id,
+    );
   }
 
   final list =
@@ -181,7 +232,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: accentColor,
                           ),
-                          onPressed: () => !isProcessing ? uploadImg() : null,
+                          onPressed: () =>
+                              !isProcessing ? uploadCategory() : null,
                           icon: const Icon(Icons.save),
                           label: Text(
                             !isProcessing ? 'Upload category' : 'Uploading...',
@@ -219,12 +271,36 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              list[index],
-                              width: 100,
-                            ),
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  list[index],
+                                  width: 100,
+                                ),
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: InkWell(
+                                    onTap: () =>
+                                        deleteDialog(id: index.toString()),
+                                    child: CircleAvatar(
+                                      radius: 13,
+                                      backgroundColor: gridBg.withOpacity(0.3),
+                                      child: const Icon(
+                                        Icons.delete_forever,
+                                        color: primaryColor,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                           const SizedBox(height: 10),
                           Text('Hello')

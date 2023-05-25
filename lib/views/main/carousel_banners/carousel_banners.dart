@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
 import '../../../helpers/screen_size.dart';
@@ -92,6 +93,51 @@ class _CarouselBannersState extends State<CarouselBanners> {
         action: uploadDone,
       );
     }
+  }
+
+
+  // action after deleting
+  void doneDeleting() {
+    Navigator.of(context).pop();
+  }
+
+  // delete carousel banners
+  Future<void> deleteCarousel(String id) async {
+    kCoolAlert(
+      message: 'Banner is trying to delete',
+      context: context,
+      alert: CoolAlertType.loading,
+    );
+
+    try {
+      await _firebase.collection('banners').doc(id).delete().whenComplete(() {
+        kCoolAlert(
+          message: 'Banner deleted successfully',
+          context: context,
+          alert: CoolAlertType.success,
+          action: doneDeleting,
+        );
+      });
+    } catch (e) {
+      kCoolAlert(
+        message: 'Banner not deleted successfully',
+        context: context,
+        alert: CoolAlertType.error,
+        action: doneDeleting,
+      );
+    }
+  }
+
+  // delete dialog
+  void deleteDialog({required String id}) {
+    areYouSureDialog(
+      title: 'Delete Banner',
+      content: 'Are you sure you want to delete this banner?',
+      context: context,
+      action: deleteCarousel,
+      isIdInvolved: true,
+      id: id,
+    );
   }
 
   final list =
@@ -183,9 +229,41 @@ class _CarouselBannersState extends State<CarouselBanners> {
                     )
                   : Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(list[index],width: 100,),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.asset(
+                                  list[index],
+                                  width: 100,
+                                ),
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: InkWell(
+                                    onTap: () =>
+                                        deleteDialog(id: index.toString()),
+                                    child: CircleAvatar(
+                                      radius: 13,
+                                      backgroundColor: gridBg.withOpacity(0.3),
+                                      child: const Icon(
+                                        Icons.delete_forever,
+                                        color: primaryColor,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
                       ),
                     ),
             ),
