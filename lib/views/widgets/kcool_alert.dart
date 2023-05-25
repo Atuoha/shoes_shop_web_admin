@@ -10,6 +10,7 @@ Future kCoolAlert({
   Function? action,
 }) {
   return CoolAlert.show(
+    width: MediaQuery.of(context).size.width /5,
       backgroundColor: primaryColor,
       confirmBtnColor: accentColor,
       context: context,
