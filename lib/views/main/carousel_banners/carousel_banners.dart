@@ -25,19 +25,22 @@ class _CarouselBannersState extends State<CarouselBanners> {
   bool isProcessing = false;
 
   Future selectImage() async {
-    FilePickerResult? pickedImage = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.image);
+    FilePickerResult? pickedImage = await FilePicker.platform
+        .pickFiles(allowMultiple: false, type: FileType.image);
 
     if (pickedImage == null) {
       return;
     } else {
       setState(() {
         isImgSelected = true;
-
-        fileBytes = pickedImage.files.first.bytes;
-        fileName = pickedImage.files.first.name;
-        selectedImage = File(pickedImage.files.single.path!);
       });
     }
+
+    setState(() {
+      fileBytes = pickedImage.files.first.bytes;
+      fileName = pickedImage.files.first.name;
+      selectedImage = File(pickedImage.files.single.path!);
+    });
   }
 
   void resetIsImagePicked() {
@@ -67,9 +70,10 @@ class _CarouselBannersState extends State<CarouselBanners> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: isImgSelected
-                      ? Image.file(
-                          File(selectedImage!.path),
+                      ? Image.memory(
+                          fileBytes!,
                           width: 150,
+                    height:150,
                         )
                       : Image.asset(
                           AssetManager.placeholderImg,
@@ -97,14 +101,14 @@ class _CarouselBannersState extends State<CarouselBanners> {
             ),
           ),
           const SizedBox(height: 10),
-          Center(
+        isImgSelected ?  Center(
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(backgroundColor: accentColor),
               onPressed: () => uploadImg(),
               icon: const Icon(Icons.save),
               label: const Text('Upload Image'),
             ),
-          ),
+          ): const SizedBox.shrink(),
           const SizedBox(height: 10),
           const Divider(color: boxBg, thickness: 1.5),
           const SizedBox(height: 5),
