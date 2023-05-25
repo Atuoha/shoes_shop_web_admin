@@ -125,21 +125,21 @@ class _CarouselBannersState extends State<CarouselBanners> {
                 Positioned(
                   bottom: 5,
                   right: 10,
-                  child: !isProcessing
-                      ? MouseRegion(
-                          cursor: SystemMouseCursors.click,
-                          child: InkWell(
-                            onTap: () => selectImage(),
-                            child: CircleAvatar(
-                              backgroundColor: gridBg,
-                              child: const Icon(
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: InkWell(
+                      onTap: () => selectImage(),
+                      child: CircleAvatar(
+                        backgroundColor: gridBg,
+                        child: !isProcessing
+                            ? const Icon(
                                 Icons.photo,
                                 color: accentColor,
-                              ),
-                            ),
-                          ),
-                        )
-                      : const LoadingWidget(size: 30),
+                              )
+                            : const LoadingWidget(size: 30),
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),
@@ -148,11 +148,14 @@ class _CarouselBannersState extends State<CarouselBanners> {
           isImgSelected
               ? Center(
                   child: ElevatedButton.icon(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: accentColor),
-                    onPressed: () => uploadImg(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                    ),
+                    onPressed: () => !isProcessing ? uploadImg() : null,
                     icon: const Icon(Icons.save),
-                    label: const Text('Upload Image'),
+                    label: Text(
+                      !isProcessing ? 'Upload image' : 'Uploading...',
+                    ),
                   ),
                 )
               : const SizedBox.shrink(),
@@ -168,7 +171,7 @@ class _CarouselBannersState extends State<CarouselBanners> {
           ),
           SizedBox(
             height:
-                isSmallScreen(context) ? size.height / 2.5 : size.height / 2.23,
+                isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
             child: GridView.builder(
               itemCount: list.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -182,7 +185,7 @@ class _CarouselBannersState extends State<CarouselBanners> {
                       padding: const EdgeInsets.all(8.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(list[index]),
+                        child: Image.asset(list[index],width: 100,),
                       ),
                     ),
             ),
