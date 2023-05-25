@@ -95,7 +95,6 @@ class _CarouselBannersState extends State<CarouselBanners> {
     }
   }
 
-
   // action after deleting
   void doneDeleting() {
     Navigator.of(context).pop();
@@ -146,129 +145,124 @@ class _CarouselBannersState extends State<CarouselBanners> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: isImgSelected
-                      ? Image.memory(
-                          fileBytes!,
-                          width: 150,
-                          height: 150,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          AssetManager.placeholderImg,
-                          width: 150,
+    return Scaffold(
+      floatingActionButton: isImgSelected
+          ? FloatingActionButton(
+              backgroundColor: !isProcessing ? accentColor: Colors.grey,
+              onPressed: () => !isProcessing ? uploadImg() : null,
+              child: const Icon(Icons.save),
+            )
+          : const SizedBox.shrink(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: isImgSelected
+                        ? Image.memory(
+                            fileBytes!,
+                            width: 150,
+                            height: 150,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            AssetManager.placeholderImg,
+                            width: 150,
+                          ),
+                  ),
+                  Positioned(
+                    bottom: 5,
+                    right: 10,
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: InkWell(
+                        onTap: () => selectImage(),
+                        child: CircleAvatar(
+                          backgroundColor: gridBg,
+                          child: !isProcessing
+                              ? const Icon(
+                                  Icons.photo,
+                                  color: accentColor,
+                                )
+                              : const LoadingWidget(size: 30),
                         ),
-                ),
-                Positioned(
-                  bottom: 5,
-                  right: 10,
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: InkWell(
-                      onTap: () => selectImage(),
-                      child: CircleAvatar(
-                        backgroundColor: gridBg,
-                        child: !isProcessing
-                            ? const Icon(
-                                Icons.photo,
-                                color: accentColor,
-                              )
-                            : const LoadingWidget(size: 30),
                       ),
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          isImgSelected
-              ? Center(
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: accentColor,
-                    ),
-                    onPressed: () => !isProcessing ? uploadImg() : null,
-                    icon: const Icon(Icons.save),
-                    label: Text(
-                      !isProcessing ? 'Upload image' : 'Uploading...',
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-          const SizedBox(height: 10),
-          const Divider(color: boxBg, thickness: 1.5),
-          const SizedBox(height: 5),
-          Text(
-            'Carousel Banners',
-            style: getMediumStyle(
-              color: Colors.black,
-              fontSize: FontSize.s16,
-            ),
-          ),
-          SizedBox(
-            height:
-                isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
-            child: GridView.builder(
-              itemCount: list.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isSmallScreen(context) ? 2 : 6,
+                  )
+                ],
               ),
-              itemBuilder: (context, index) => list.isEmpty
-                  ? Center(
-                      child: Image.asset(AssetManager.noImagePlaceholderImg),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  list[index],
-                                  width: 100,
+            ),
+            const SizedBox(height: 10),
+            const Divider(color: boxBg, thickness: 1.5),
+            const SizedBox(height: 5),
+            Text(
+              'Carousel Banners',
+              style: getMediumStyle(
+                color: Colors.black,
+                fontSize: FontSize.s16,
+              ),
+            ),
+            SizedBox(
+              height:
+                  isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
+              child: GridView.builder(
+                itemCount: list.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isSmallScreen(context) ? 2 : 6,
+                ),
+                itemBuilder: (context, index) => list.isEmpty
+                    ? Center(
+                        child: Image.asset(AssetManager.noImagePlaceholderImg),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    list[index],
+                                    width: 100,
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                top: 5,
-                                right: 5,
-                                child: MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: InkWell(
-                                    onTap: () =>
-                                        deleteDialog(id: index.toString()),
-                                    child: CircleAvatar(
-                                      radius: 13,
-                                      backgroundColor: gridBg.withOpacity(0.3),
-                                      child: const Icon(
-                                        Icons.delete_forever,
-                                        color: primaryColor,
-                                        size: 18,
+                                Positioned(
+                                  top: 5,
+                                  right: 5,
+                                  child: MouseRegion(
+                                    cursor: SystemMouseCursors.click,
+                                    child: InkWell(
+                                      onTap: () =>
+                                          deleteDialog(id: index.toString()),
+                                      child: CircleAvatar(
+                                        radius: 13,
+                                        backgroundColor:
+                                            gridBg.withOpacity(0.3),
+                                        child: const Icon(
+                                          Icons.delete_forever,
+                                          color: primaryColor,
+                                          size: 18,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-            ),
-          )
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

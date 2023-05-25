@@ -16,6 +16,7 @@ Future kCoolAlert({
       context: context,
       type: alert,
       text: message,
-      onConfirmBtnTap: ()=>action!()
+      onConfirmBtnTap: ()=>action!(),
+    barrierDismissible: false,
   );
 }
