@@ -1,21 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants/color.dart';
 import '../../helpers/screen_size.dart';
 import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
 
-SizedBox categoryGrid({
-  required BuildContext context,
-  required Size size,
-  required Stream<QuerySnapshot> stream,
-  required Function deleteDialog,
-}) {
-  return SizedBox(
-    height: isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
-    child: StreamBuilder<QuerySnapshot>(
-      stream: stream,
+class CategoryGrid extends StatelessWidget {
+  const CategoryGrid({
+    Key? key,
+    required this.deleteDialog,
+  }) : super(key: key);
+
+  final Function deleteDialog;
+
+  @override
+  Widget build(BuildContext context) {
+    Stream<QuerySnapshot> categoryStream =
+    FirebaseFirestore.instance.collection('categories').snapshots();
+
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: categoryStream,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           const Center(
@@ -53,7 +58,7 @@ SizedBox categoryGrid({
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                          item['img_url'],
+                        item['ímg_url'],
                           width: 100,
                         ),
                       ),
@@ -88,6 +93,6 @@ SizedBox categoryGrid({
           },
         );
       },
-    ),
-  );
+    );
+  }
 }

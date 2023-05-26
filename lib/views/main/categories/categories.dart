@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
+import '../../../helpers/screen_size.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -31,9 +32,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
   TextEditingController categoryName = TextEditingController();
-
-  Stream<QuerySnapshot> categoryStream =
-      FirebaseFirestore.instance.collection('categories').snapshots();
 
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
@@ -64,6 +62,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     setState(() {
       isProcessing = false;
       isImgSelected = false;
+      categoryName.clear();
     });
   }
 
@@ -102,6 +101,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           alert: CoolAlertType.success,
           action: uploadDone,
         );
+        categoryName.clear();
       });
     } catch (e) {
       kCoolAlert(
@@ -252,11 +252,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               fontSize: FontSize.s16,
             ),
           ),
-          categoryGrid(
-            context: context,
-            size: size,
-            stream: categoryStream,
-            deleteDialog: deleteDialog,
+          SizedBox(
+            height:
+                isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
+            child: CategoryGrid(
+              deleteDialog: deleteDialog,
+            ),
           )
         ],
       ),

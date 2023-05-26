@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
+import '../../../helpers/screen_size.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -29,8 +30,6 @@ class _CarouselBannersState extends State<CarouselBanners> {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
 
-  Stream<QuerySnapshot> bannerStream =
-      FirebaseFirestore.instance.collection('banners').snapshots();
 
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
@@ -203,11 +202,12 @@ class _CarouselBannersState extends State<CarouselBanners> {
                 fontSize: FontSize.s16,
               ),
             ),
-            carouselBanners(
-              context: context,
-              size: size,
-              stream: bannerStream,
-              deleteDialog: deleteDialog,
+            SizedBox(
+              height:
+                  isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
+              child: CarouselBannerGrid(
+                deleteDialog: deleteDialog,
+              ),
             ),
           ],
         ),
