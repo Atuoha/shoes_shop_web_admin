@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shoes_shop_admin/resources/theme_manager.dart';
 import 'package:shoes_shop_admin/views/splash/entry.dart';
+import 'constants/color.dart';
 import 'controllers/route_manager.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,12 +36,20 @@ class MyApp extends StatelessWidget {
         statusBarColor: Colors.transparent,
       ),
     );
+
+    EasyLoading.instance
+      ..backgroundColor = primaryColor
+      ..progressColor = Colors.white
+      ..loadingStyle = EasyLoadingStyle.light;
+
+
     return MaterialApp(
       theme: getLightTheme(),
       title: 'Shoes Shop',
       debugShowCheckedModeBanner: false,
       home: const EntryScreen(),
       routes: routes,
+      builder: EasyLoading.init(),
     );
   }
 }

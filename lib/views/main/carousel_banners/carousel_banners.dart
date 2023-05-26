@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
@@ -7,14 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
-import '../../../helpers/screen_size.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
-import '../../../resources/values_manager.dart';
 import 'package:file_picker/file_picker.dart';
-
+import '../../components/grid_carousel_banners.dart';
 import '../../widgets/kcool_alert.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CarouselBanners extends StatefulWidget {
   const CarouselBanners({Key? key}) : super(key: key);
@@ -30,6 +28,9 @@ class _CarouselBannersState extends State<CarouselBanners> {
   bool isProcessing = false;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
+
+  Stream<QuerySnapshot> bannerStream =
+      FirebaseFirestore.instance.collection('banners').snapshots();
 
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
@@ -102,14 +103,12 @@ class _CarouselBannersState extends State<CarouselBanners> {
 
   // delete carousel banners
   Future<void> deleteCarousel(String id) async {
-    kCoolAlert(
-      message: 'Banner is trying to delete',
-      context: context,
-      alert: CoolAlertType.loading,
-    );
+    Navigator.of(context).pop();
+    EasyLoading.show(status: 'loading...');
 
     try {
       await _firebase.collection('banners').doc(id).delete().whenComplete(() {
+        EasyLoading.dismiss();
         kCoolAlert(
           message: 'Banner deleted successfully',
           context: context,
@@ -139,16 +138,13 @@ class _CarouselBannersState extends State<CarouselBanners> {
     );
   }
 
-  final list =
-      List.generate(50, (index) => AssetManager.placeholderImg).toList();
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       floatingActionButton: isImgSelected
           ? FloatingActionButton(
-              backgroundColor: !isProcessing ? accentColor: Colors.grey,
+              backgroundColor: !isProcessing ? accentColor : Colors.grey,
               onPressed: () => !isProcessing ? uploadImg() : null,
               child: const Icon(Icons.save),
             )
@@ -207,60 +203,12 @@ class _CarouselBannersState extends State<CarouselBanners> {
                 fontSize: FontSize.s16,
               ),
             ),
-            SizedBox(
-              height:
-                  isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
-              child: GridView.builder(
-                itemCount: list.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isSmallScreen(context) ? 2 : 6,
-                ),
-                itemBuilder: (context, index) => list.isEmpty
-                    ? Center(
-                        child: Image.asset(AssetManager.noImagePlaceholderImg),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    list[index],
-                                    width: 100,
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 5,
-                                  right: 5,
-                                  child: MouseRegion(
-                                    cursor: SystemMouseCursors.click,
-                                    child: InkWell(
-                                      onTap: () =>
-                                          deleteDialog(id: index.toString()),
-                                      child: CircleAvatar(
-                                        radius: 13,
-                                        backgroundColor:
-                                            gridBg.withOpacity(0.3),
-                                        child: const Icon(
-                                          Icons.delete_forever,
-                                          color: primaryColor,
-                                          size: 18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-              ),
-            )
+            carouselBanners(
+              context: context,
+              size: size,
+              stream: bannerStream,
+              deleteDialog: deleteDialog,
+            ),
           ],
         ),
       ),

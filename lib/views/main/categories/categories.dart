@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
@@ -7,16 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
-import '../../../helpers/screen_size.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
-import '../../../resources/values_manager.dart';
 import 'package:file_picker/file_picker.dart';
-
+import '../../components/grid_categories.dart';
 import '../../widgets/are_you_sure_dialog.dart';
 import '../../widgets/kcool_alert.dart';
 import '../../widgets/msg_snackbar.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({Key? key}) : super(key: key);
@@ -33,6 +31,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
   TextEditingController categoryName = TextEditingController();
+
+  Stream<QuerySnapshot> categoryStream =
+      FirebaseFirestore.instance.collection('categories').snapshots();
 
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
@@ -69,11 +70,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   // upload Category
   Future<void> uploadCategory() async {
     //if category name is empty
-    if (categoryName.text.isEmpty) {
+    if (categoryName.text.isEmpty || categoryName.text.length < 4) {
       displaySnackBar(
-          status: Status.error,
-          message: 'Category name is empty',
-          context: context);
+        status: Status.error,
+        message: categoryName.text.isEmpty
+            ? 'Category name is empty'
+            : 'Category name is not valid',
+        context: context,
+      );
       return;
     }
 
@@ -116,11 +120,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   // delete category
   Future<void> deleteCategory(String id) async {
-    kCoolAlert(
-      message: 'Category is trying to delete',
-      context: context,
-      alert: CoolAlertType.loading,
-    );
+    Navigator.of(context).pop();
+    EasyLoading.show(status: 'loading...');
 
     try {
       await _firebase
@@ -128,6 +129,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           .doc(id)
           .delete()
           .whenComplete(() {
+        EasyLoading.dismiss();
         kCoolAlert(
           message: 'Category deleted successfully',
           context: context,
@@ -145,7 +147,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-
   // delete dialog
   void deleteDialog({required String id}) {
     areYouSureDialog(
@@ -157,9 +158,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       id: id,
     );
   }
-
-  final list =
-      List.generate(50, (index) => AssetManager.placeholderImg).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -254,60 +252,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               fontSize: FontSize.s16,
             ),
           ),
-          SizedBox(
-            height:
-                isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
-            child: GridView.builder(
-              itemCount: list.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isSmallScreen(context) ? 2 : 6,
-                crossAxisSpacing: 10,
-              ),
-              itemBuilder: (context, index) => list.isEmpty
-                  ? Center(
-                      child: Image.asset(AssetManager.noImagePlaceholderImg),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          Stack(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  list[index],
-                                  width: 100,
-                                ),
-                              ),
-                              Positioned(
-                                top: 5,
-                                right: 5,
-                                child: MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: InkWell(
-                                    onTap: () =>
-                                        deleteDialog(id: index.toString()),
-                                    child: CircleAvatar(
-                                      radius: 13,
-                                      backgroundColor: gridBg.withOpacity(0.3),
-                                      child: const Icon(
-                                        Icons.delete_forever,
-                                        color: primaryColor,
-                                        size: 18,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Text('Hello')
-                        ],
-                      ),
-                    ),
-            ),
+          categoryGrid(
+            context: context,
+            size: size,
+            stream: categoryStream,
+            deleteDialog: deleteDialog,
           )
         ],
       ),
