@@ -3,8 +3,14 @@ import 'package:shoes_shop_admin/constants/color.dart';
 import 'package:shoes_shop_admin/helpers/screen_size.dart';
 import 'package:shoes_shop_admin/resources/styles_manager.dart';
 import 'package:shoes_shop_admin/views/main/main_screen.dart';
-
+import '../../models/app_data.dart';
+import '../../models/chart_sample.dart';
 import '../../resources/font_manager.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+
+import '../components/app_data_graph.dart';
+import '../components/category_pie_data.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,6 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<AppData> data = [
+      AppData('Vendors', 35),
+      AppData('Products', 28),
+      AppData('Orders', 34),
+      AppData('Users', 32),
+      AppData('Categories', 40)
+    ];
+
     // single gridView Item
     Widget buildDashboardItem({
       required String title,
@@ -163,36 +177,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: context.screenSize ? 1 : 3,
-                      child: Container(
-                        color: Colors.transparent,
-                        height: 400,
-                        child: Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 30),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        color: Colors.transparent,
-                        height: 400,
-                        child: Card(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                child: LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    if (constraints.maxWidth > 600) {
+                      return Row(
+                        children: [
+                          Expanded(flex: 3, child: AppDataGraph(data: data)),
+                          const SizedBox(width: 30),
+                          const Expanded(child: CategoryDataPie()),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          AppDataGraph(data: data),
+                          const SizedBox(width: 30),
+                          const CategoryDataPie(),
+                        ],
+                      );
+                    }
+                  },
                 ),
               )
             ],
