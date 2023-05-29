@@ -47,6 +47,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
               DataColumn(label: Text('Account Number')),
               DataColumn(label: Text('Email Address')),
               DataColumn(label: Text('Phone Number')),
+              DataColumn(label: Text('Action')),
             ],
             rows: [
               DataRow(
@@ -57,6 +58,10 @@ class _CashOutScreenState extends State<CashOutScreen> {
                   DataCell(Text('1020401130')),
                   DataCell(Text('joshstores@gmail.com')),
                   DataCell(Text('+23481234990458')),
+                  DataCell(ElevatedButton(
+                    onPressed: null,
+                    child: Text('Delete'),
+                  )),
                 ],
               )
             ],

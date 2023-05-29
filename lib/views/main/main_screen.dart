@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/views/main/users/users.dart';
 import 'products/products.dart';
 import 'vendors/vendors.dart';
 import '../../resources/assets_manager.dart';
@@ -13,7 +14,9 @@ import '../../constants/color.dart';
 import 'home_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  const MainScreen({super.key, this.index = 0});
+
+  final int index;
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -30,12 +33,21 @@ class _MainScreenState extends State<MainScreen> {
     CarouselBanners(),
     CategoriesScreen(),
     CashOutScreen(),
+    UsersScreen(),
   ];
 
   void setNewPage(int index) {
     setState(() {
       _pageIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.index != 0) {
+      setNewPage(widget.index);
+    }
+    super.initState();
   }
 
   // for navigation rail
@@ -179,6 +191,10 @@ class _MainScreenState extends State<MainScreen> {
                         NavigationRailDestination(
                           icon: Icon(Icons.monetization_on_outlined),
                           label: Text('Cash outs'),
+                        ),
+                        NavigationRailDestination(
+                          icon: Icon(Icons.group),
+                          label: Text('Users'),
                         ),
                       ],
                       selectedIndex: _pageIndex,

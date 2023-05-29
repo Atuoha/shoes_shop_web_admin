@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shoes_shop_admin/resources/assets_manager.dart';
 
 import '../../../constants/color.dart';
+import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({Key? key}) : super(key: key);
+class UsersScreen extends StatefulWidget {
+  const UsersScreen({Key? key}) : super(key: key);
 
   @override
-  State<ProductScreen> createState() => _ProductScreenState();
+  State<UsersScreen> createState() => _UsersScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _UsersScreenState extends State<UsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -23,10 +23,10 @@ class _ProductScreenState extends State<ProductScreen> {
           Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Icon(Icons.shopping_bag),
+              const Icon(Icons.group),
               const SizedBox(width: 10),
               Text(
-                'Products',
+                'Users',
                 style: getMediumStyle(
                   color: Colors.black,
                   fontSize: FontSize.s16,
@@ -38,36 +38,29 @@ class _ProductScreenState extends State<ProductScreen> {
           DataTable(
             showBottomBorder: true,
             headingRowColor:
-                MaterialStateColor.resolveWith((states) => primaryColor),
+            MaterialStateColor.resolveWith((states) => primaryColor),
             headingTextStyle: const TextStyle(color: Colors.white),
             dataRowHeight: 60,
             columns: const [
-              DataColumn(label: Text('Product Name')),
-              DataColumn(label: Text('Product Image')),
-              DataColumn(label: Text('Product Price')),
-              DataColumn(label: Text('Product Quantity')),
-              DataColumn(label: Text('Action')),
+              DataColumn(label: Text('Full Name')),
+              DataColumn(label: Text('User Image')),
+              DataColumn(label: Text('Email Address')),
               DataColumn(label: Text('Action')),
             ],
             rows: [
               DataRow(
                 cells: [
-                  DataCell(Text('Product Name')),
+                  DataCell(Text('Josh Stores')),
                   DataCell(
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: Image.asset(
-                        AssetManager.placeholderImg,
+                        AssetManager.avatar,
                         width: 50,
                       ),
                     ),
                   ),
-                  DataCell(Text('\$66.00')),
-                  DataCell(Text('11')),
-                  DataCell(ElevatedButton(
-                    onPressed: null,
-                    child: Text('Reject'),
-                  )),
+                  DataCell(Text('joshstores@gmail.com')),
                   DataCell(ElevatedButton(
                     onPressed: null,
                     child: Text('Delete'),

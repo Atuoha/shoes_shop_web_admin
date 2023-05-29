@@ -49,6 +49,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
               DataColumn(label: Text('Country')),
               DataColumn(label: Text('Email Address')),
               DataColumn(label: Text('Action')),
+              DataColumn(label: Text('Action')),
             ],
             rows: [
               DataRow(
@@ -70,6 +71,10 @@ class _VendorsScreenState extends State<VendorsScreen> {
                   DataCell(ElevatedButton(
                     onPressed: null,
                     child: Text('Reject'),
+                  )),
+                  DataCell(ElevatedButton(
+                    onPressed: null,
+                    child: Text('Delete'),
                   )),
                 ],
               )

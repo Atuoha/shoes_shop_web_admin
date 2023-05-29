@@ -30,3 +30,11 @@ const otherImgsBg = Color(0XFFCBCBCC);
 const storeColor = Color(0XFFABACB1);
 
 var primaryOpacity = const Color(0xFFDC1D25).withOpacity(0.8);
+
+
+var dashBlue = Colors.blue.withOpacity(0.6);
+var dashGrey = Colors.grey.withOpacity(0.6);
+var dashOrange = Colors.orange.withOpacity(0.6);
+var dashPurple =  Colors.purple.withOpacity(0.6);
+var dashRed =  Colors.red.withOpacity(0.6);
+var dashTeal = Colors.teal.withOpacity(0.6);

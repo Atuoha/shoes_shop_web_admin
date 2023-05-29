@@ -48,6 +48,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
               DataColumn(label: Text('City')),
               DataColumn(label: Text('State')),
               DataColumn(label: Text('Action')),
+              DataColumn(label: Text('Action')),
             ],
             rows: [
               DataRow(
@@ -67,7 +68,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   DataCell(Text('Imo State')),
                   DataCell(ElevatedButton(
                     onPressed: null,
-                    child: Text('Reject'),
+                    child: Text('Approve'),
+                  )),
+                  DataCell(ElevatedButton(
+                    onPressed: null,
+                    child: Text('Delete'),
                   )),
                 ],
               )
