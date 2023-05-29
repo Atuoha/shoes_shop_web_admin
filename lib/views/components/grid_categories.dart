@@ -18,8 +18,7 @@ class CategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Stream<QuerySnapshot> categoryStream =
-    FirebaseFirestore.instance.collection('categories').snapshots();
-
+        FirebaseFirestore.instance.collection('categories').snapshots();
 
     return StreamBuilder<QuerySnapshot>(
       stream: categoryStream,
@@ -36,6 +35,11 @@ class CategoryGrid extends StatelessWidget {
           );
         }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          ErrorWidget.builder = (FlutterErrorDetails details) => const Center(
+                child: LoadingWidget(),
+              );
+        }
 
         if (snapshot.data!.docs.isEmpty) {
           Center(
@@ -48,7 +52,7 @@ class CategoryGrid extends StatelessWidget {
         }
 
         return GridView.builder(
-          shrinkWrap:true,
+          shrinkWrap: true,
           itemCount: snapshot.data!.docs.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: isSmallScreen(cxt) ? 2 : 6,

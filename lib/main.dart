@@ -11,6 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // ErrorWidget.builder = (FlutterErrorDetails details) => Container();
 
   await Firebase.initializeApp(
     options: kIsWeb || Platform.isAndroid
@@ -20,6 +21,8 @@ Future<void> main() async {
             messagingSenderId: "719326293072",
             projectId: "shoeshop-87640",
             storageBucket: "shoeshop-87640.appspot.com",
+            measurementId: "G-SND807S5J5",
+            authDomain: "shoeshop-87640.firebaseapp.com",
           )
         : null,
   );
@@ -41,7 +44,6 @@ class MyApp extends StatelessWidget {
       ..backgroundColor = primaryColor
       ..progressColor = Colors.white
       ..loadingStyle = EasyLoadingStyle.light;
-
 
     return MaterialApp(
       theme: getLightTheme(),
