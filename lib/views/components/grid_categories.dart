@@ -9,9 +9,11 @@ class CategoryGrid extends StatelessWidget {
   const CategoryGrid({
     Key? key,
     required this.deleteDialog,
+    required this.cxt,
   }) : super(key: key);
 
   final Function deleteDialog;
+  final BuildContext cxt;
 
   @override
   Widget build(BuildContext context) {
@@ -34,16 +36,22 @@ class CategoryGrid extends StatelessWidget {
           );
         }
 
+
         if (snapshot.data!.docs.isEmpty) {
           Center(
             child: Image.asset(AssetManager.noImagePlaceholderImg),
           );
         }
 
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Center(child: Text('No Data Available'));
+        }
+
         return GridView.builder(
+          shrinkWrap:true,
           itemCount: snapshot.data!.docs.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isSmallScreen(context) ? 2 : 6,
+            crossAxisCount: isSmallScreen(cxt) ? 2 : 6,
             crossAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {
@@ -58,7 +66,7 @@ class CategoryGrid extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
-                        item['ímg_url'],
+                          item['img_url'],
                           width: 100,
                         ),
                       ),

@@ -14,6 +14,7 @@ import 'package:file_picker/file_picker.dart';
 import '../../components/grid_carousel_banners.dart';
 import '../../widgets/kcool_alert.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import '../../../repositories/carousel_banner_repository.dart';
 
 class CarouselBanners extends StatefulWidget {
   const CarouselBanners({Key? key}) : super(key: key);
@@ -31,6 +32,8 @@ class _CarouselBannersState extends State<CarouselBanners> {
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
 
 
+
+  // select image
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
         .pickFiles(allowMultiple: false, type: FileType.image);
@@ -49,12 +52,16 @@ class _CarouselBannersState extends State<CarouselBanners> {
     });
   }
 
+
+  // reset picked image
   void resetIsImagePicked() {
     setState(() {
       isImgSelected = false;
     });
   }
 
+
+  // action after uploading banner
   uploadDone() {
     Navigator.of(context).pop();
     setState(() {
@@ -63,6 +70,8 @@ class _CarouselBannersState extends State<CarouselBanners> {
     });
   }
 
+
+  // upload banner image
   Future<void> uploadImg() async {
     setState(() {
       isProcessing = true;
@@ -73,11 +82,10 @@ class _CarouselBannersState extends State<CarouselBanners> {
       await ref.putData(fileBytes!).whenComplete(() async {
         downloadLink = await ref.getDownloadURL();
       });
-      await _firebase.collection('banners').doc(fileName).set(
-        {
-          'img_url': downloadLink,
-        },
-      ).whenComplete(() {
+
+      CarouselBannerRepository.createBanner(
+              fileName: fileName, downloadLink: downloadLink)
+          .whenComplete(() {
         kCoolAlert(
           message: 'Image uploaded successfully',
           context: context,
@@ -150,66 +158,65 @@ class _CarouselBannersState extends State<CarouselBanners> {
           : const SizedBox.shrink(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: isImgSelected
-                        ? Image.memory(
-                            fileBytes!,
-                            width: 150,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.asset(
-                            AssetManager.placeholderImg,
-                            width: 150,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: isImgSelected
+                          ? Image.memory(
+                              fileBytes!,
+                              width: 150,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              AssetManager.placeholderImg,
+                              width: 150,
+                            ),
+                    ),
+                    Positioned(
+                      bottom: 5,
+                      right: 10,
+                      child: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: InkWell(
+                          onTap: () => selectImage(),
+                          child: CircleAvatar(
+                            backgroundColor: gridBg,
+                            child: !isProcessing
+                                ? const Icon(
+                                    Icons.photo,
+                                    color: accentColor,
+                                  )
+                                : const LoadingWidget(size: 30),
                           ),
-                  ),
-                  Positioned(
-                    bottom: 5,
-                    right: 10,
-                    child: MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: InkWell(
-                        onTap: () => selectImage(),
-                        child: CircleAvatar(
-                          backgroundColor: gridBg,
-                          child: !isProcessing
-                              ? const Icon(
-                                  Icons.photo,
-                                  color: accentColor,
-                                )
-                              : const LoadingWidget(size: 30),
                         ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            const Divider(color: boxBg, thickness: 1.5),
-            const SizedBox(height: 5),
-            Text(
-              'Carousel Banners',
-              style: getMediumStyle(
-                color: Colors.black,
-                fontSize: FontSize.s16,
+              const SizedBox(height: 10),
+              const Divider(color: boxBg, thickness: 1.5),
+              const SizedBox(height: 5),
+              Text(
+                'Carousel Banners',
+                style: getMediumStyle(
+                  color: Colors.black,
+                  fontSize: FontSize.s16,
+                ),
               ),
-            ),
-            SizedBox(
-              height:
-                  isSmallScreen(context) ? size.height / 2.5 : size.height / 2,
-              child: CarouselBannerGrid(
+              CarouselBannerGrid(
                 deleteDialog: deleteDialog,
+                cxt: context,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
