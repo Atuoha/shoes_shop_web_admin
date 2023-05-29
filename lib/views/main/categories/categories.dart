@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/helpers/screen_size.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
 import '../../../constants/enums/status.dart';
-import '../../../helpers/screen_size.dart';
+import '../../../helpers/responsive.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -258,9 +259,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 fontSize: FontSize.s16,
               ),
             ),
-            CategoryGrid(
-              deleteDialog: deleteDialog,
-              cxt: context,
+            SizedBox(
+              height: context.screenSize ? size.height / 2.5 : size.height / 2,
+              child: CategoryGrid(
+                deleteDialog: deleteDialog,
+                cxt: context,
+              ),
             )
           ],
         ),

@@ -99,7 +99,6 @@ class _MainScreenState extends State<MainScreen> {
               color: accentColor,
             ),
           ),
-
         ],
         leading: IconButton(
           onPressed: () => setState(() {
@@ -189,8 +188,13 @@ class _MainScreenState extends State<MainScreen> {
               );
             }),
           ),
-          Expanded(child: Padding(
-            padding:  EdgeInsets.only(top:MediaQuery.of(context).padding.top,left:18,right:18,),
+          Expanded(
+              child: Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              left: 18,
+              right: 18,
+            ),
             child: _pages[_pageIndex],
           ))
         ],

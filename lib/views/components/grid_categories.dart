@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/helpers/screen_size.dart';
 import '../../constants/color.dart';
-import '../../helpers/screen_size.dart';
+import '../../helpers/responsive.dart';
 import '../../resources/assets_manager.dart';
 import '../widgets/loading_widget.dart';
 
@@ -52,10 +53,11 @@ class CategoryGrid extends StatelessWidget {
         }
 
         return GridView.builder(
+          physics: const ClampingScrollPhysics(),
           shrinkWrap: true,
           itemCount: snapshot.data!.docs.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isSmallScreen(cxt) ? 2 : 6,
+            crossAxisCount: context.screenSize ? 2 : 6,
             crossAxisSpacing: 10,
           ),
           itemBuilder: (context, index) {

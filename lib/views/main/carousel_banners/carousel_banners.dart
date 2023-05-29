@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/helpers/screen_size.dart';
 import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 import 'package:shoes_shop_admin/views/widgets/loading_widget.dart';
 import '../../../constants/color.dart';
-import '../../../helpers/screen_size.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
@@ -31,8 +31,6 @@ class _CarouselBannersState extends State<CarouselBanners> {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
 
-
-
   // select image
   Future selectImage() async {
     FilePickerResult? pickedImage = await FilePicker.platform
@@ -52,14 +50,12 @@ class _CarouselBannersState extends State<CarouselBanners> {
     });
   }
 
-
   // reset picked image
   void resetIsImagePicked() {
     setState(() {
       isImgSelected = false;
     });
   }
-
 
   // action after uploading banner
   uploadDone() {
@@ -69,7 +65,6 @@ class _CarouselBannersState extends State<CarouselBanners> {
       isImgSelected = false;
     });
   }
-
 
   // upload banner image
   Future<void> uploadImg() async {
@@ -156,9 +151,9 @@ class _CarouselBannersState extends State<CarouselBanners> {
               child: const Icon(Icons.save),
             )
           : const SizedBox.shrink(),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -211,9 +206,13 @@ class _CarouselBannersState extends State<CarouselBanners> {
                   fontSize: FontSize.s16,
                 ),
               ),
-              CarouselBannerGrid(
-                deleteDialog: deleteDialog,
-                cxt: context,
+              SizedBox(
+                height:
+                    context.screenSize ? size.height / 2.5 : size.height / 2,
+                child: CarouselBannerGrid(
+                  deleteDialog: deleteDialog,
+                  cxt: context,
+                ),
               ),
             ],
           ),
