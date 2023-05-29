@@ -31,6 +31,7 @@ const storeColor = Color(0XFFABACB1);
 
 var primaryOpacity = const Color(0xFFDC1D25).withOpacity(0.8);
 
+const bgColor = Color(0XFFEFEEF3);
 
 var dashBlue = Colors.blue.withOpacity(0.6);
 var dashGrey = Colors.grey.withOpacity(0.6);

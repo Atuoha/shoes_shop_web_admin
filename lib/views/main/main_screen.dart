@@ -208,8 +208,6 @@ class _MainScreenState extends State<MainScreen> {
               child: Padding(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top,
-              left: 18,
-              right: 18,
             ),
             child: _pages[_pageIndex],
           ))
