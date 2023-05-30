@@ -78,9 +78,11 @@ class _CarouselBannersState extends State<CarouselBanners> {
         downloadLink = await ref.getDownloadURL();
       });
 
-      CarouselBannerRepository.createBanner(
-              fileName: fileName, downloadLink: downloadLink)
-          .whenComplete(() {
+      await FirebaseFirestore.instance.collection('banners').doc(fileName).set(
+        {
+          'img_url': downloadLink,
+        },
+      ).whenComplete(() {
         kCoolAlert(
           message: 'Image uploaded successfully',
           context: context,
