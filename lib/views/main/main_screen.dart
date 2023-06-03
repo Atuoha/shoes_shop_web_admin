@@ -1,5 +1,9 @@
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/main/users/users.dart';
+import '../../controllers/route_manager.dart';
 import 'products/products.dart';
 import 'vendors/vendors.dart';
 import '../../resources/assets_manager.dart';
@@ -58,7 +62,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // logout
-  logout() {}
+  logout() async {
+    await FirebaseAuth.instance.signOut();
+    Timer(
+      const Duration(seconds: 2),
+      () => Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteManager.entryScreen,
+        (route) => false,
+      ),
+    );
+  }
 
   // logout dialog
   logoutDialog() {

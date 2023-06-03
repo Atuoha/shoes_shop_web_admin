@@ -1,8 +1,9 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider, PhoneAuthProvider;
-import '../main/home_screen.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+
+import '../main/main_screen.dart';
 
 class AuthenticationScreen extends StatelessWidget {
   const AuthenticationScreen({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class AuthenticationScreen extends StatelessWidget {
         }
 
         // Render your application if authenticated
-        return HomeScreen();
+        return const MainScreen();
       },
     );
   }

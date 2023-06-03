@@ -48,6 +48,17 @@ ThemeData getLightTheme() {
       disabledColor: backgroundLite,
     ),
 
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all<EdgeInsets>(
+          const EdgeInsets.all(24),
+        ),
+        backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      ),
+    ),
+
+
     // elevated button theme
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
