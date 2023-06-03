@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/constants/color.dart';
-import 'package:shoes_shop_admin/helpers/screen_size.dart';
 import 'package:shoes_shop_admin/resources/styles_manager.dart';
 import 'package:shoes_shop_admin/views/main/main_screen.dart';
 import '../../models/app_data.dart';
-import '../../models/chart_sample.dart';
 import '../../resources/font_manager.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-
 import '../components/app_data_graph.dart';
 import '../components/category_pie_data.dart';
 

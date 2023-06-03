@@ -1,3 +1,4 @@
+import '../views/auth/auth.dart';
 import '../views/main/main_screen.dart';
 import '../views/splash/entry.dart';
 
@@ -14,4 +15,5 @@ class RouteManager {
 final routes = {
   RouteManager.entryScreen: (context) => const EntryScreen(),
   RouteManager.mainScreen: (context) => const MainScreen(),
+  RouteManager.authScreen: (context)=> const AuthenticationScreen(),
 };

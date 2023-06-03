@@ -52,6 +52,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   uuid: ^3.0.7
   syncfusion_flutter_charts: ^21.2.6
+  firebase_ui_auth: ^1.4.2
+  firebase_ui_oauth_google: ^1.2.2
 
 dev_dependencies:
   flutter_test:
