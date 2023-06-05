@@ -57,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
                         const SizedBox(width: 10),
                         Text(
                           user.displayName ?? 'Shop Admin',
-                          style:  TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             color: dashGrey,
                             fontWeight: FontWeight.w600,
@@ -73,33 +73,36 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     child: Center(
-                      child: Hero(
-                        tag: user.email!,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            user.photoURL != null
-                                ? CircleAvatar(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          user.photoURL != null
+                              ? Hero(
+                                  tag: user.email!,
+                                  child: CircleAvatar(
                                     radius: 40,
                                     backgroundImage: NetworkImage(
                                       user.photoURL!,
                                     ),
-                                  )
-                                : const CircleAvatar(
+                                  ),
+                                )
+                              : Hero(
+                                  tag: user.email!,
+                                  child: const CircleAvatar(
                                     radius: 40,
                                     backgroundImage: AssetImage(
                                       AssetManager.avatar,
                                     ),
                                   ),
-                            const SizedBox(height: 10),
-                            Text(
-                              user.displayName ?? 'Shop Admin',
-                              style: getRegularStyle(
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
+                                ),
+                          const SizedBox(height: 10),
+                          Text(
+                            user.displayName ?? 'Shop Admin',
+                            style: getRegularStyle(
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -266,7 +269,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height:20),
+                    SizedBox(height: 20),
                   ],
                 ),
               ),

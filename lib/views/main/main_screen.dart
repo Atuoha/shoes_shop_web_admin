@@ -165,31 +165,37 @@ class _MainScreenState extends State<MainScreen> {
                       leading: MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
-                          onTap: ()=>Navigator.of(context).pushNamed(RouteManager.profileScreen),
-                          child: Hero(
-                            tag:user.email!,
-                            child: Column(
-                              children: [
-                                user.photoURL != null
-                                    ? CircleAvatar(
-                                        backgroundColor: accentColor.withOpacity(0.2),
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(RouteManager.profileScreen),
+                          child: Column(
+                            children: [
+                              user.photoURL != null
+                                  ? Hero(
+                                      tag: user.email!,
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            accentColor.withOpacity(0.2),
                                         backgroundImage: NetworkImage(
                                           user.photoURL!,
                                         ),
-                                      )
-                                    : CircleAvatar(
-                                        backgroundColor: accentColor.withOpacity(0.2),
+                                      ),
+                                    )
+                                  : Hero(
+                                      tag: user.email!,
+                                      child: CircleAvatar(
+                                        backgroundColor:
+                                            accentColor.withOpacity(0.2),
                                         backgroundImage: const AssetImage(
                                           AssetManager.avatar,
                                         ),
                                       ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  user.displayName ?? 'Shop Admin',
-                                  style: getMediumStyle(color: accentColor),
-                                )
-                              ],
-                            ),
+                                    ),
+                              const SizedBox(height: 10),
+                              Text(
+                                user.displayName ?? 'Shop Admin',
+                                style: getMediumStyle(color: accentColor),
+                              )
+                            ],
                           ),
                         ),
                       ),
