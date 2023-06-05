@@ -49,8 +49,9 @@ class AuthenticationScreen extends StatelessWidget {
               EmailAuthProvider(),
               PhoneAuthProvider(),
               GoogleProvider(
-                  clientId:
-                      '719326293072-q9ao67f1nolt50ev21om8bou759cr4mk.apps.googleusercontent.com'),
+                clientId:
+                    '719326293072-q9ao67f1nolt50ev21om8bou759cr4mk.apps.googleusercontent.com',
+              ),
             ],
           );
         }

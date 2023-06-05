@@ -162,27 +162,36 @@ class _MainScreenState extends State<MainScreen> {
                         _pageIndex = index;
                       }),
                       labelType: NavigationRailLabelType.none,
-                      leading: Column(
-                        children: [
-                          user.photoURL != null
-                              ? CircleAvatar(
-                                  backgroundColor: accentColor.withOpacity(0.2),
-                                  backgroundImage: NetworkImage(
-                                    user.photoURL!,
-                                  ),
+                      leading: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: ()=>Navigator.of(context).pushNamed(RouteManager.profileScreen),
+                          child: Hero(
+                            tag:user.email!,
+                            child: Column(
+                              children: [
+                                user.photoURL != null
+                                    ? CircleAvatar(
+                                        backgroundColor: accentColor.withOpacity(0.2),
+                                        backgroundImage: NetworkImage(
+                                          user.photoURL!,
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        backgroundColor: accentColor.withOpacity(0.2),
+                                        backgroundImage: const AssetImage(
+                                          AssetManager.avatar,
+                                        ),
+                                      ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  user.displayName ?? 'Shop Admin',
+                                  style: getMediumStyle(color: accentColor),
                                 )
-                              : CircleAvatar(
-                                  backgroundColor: accentColor.withOpacity(0.2),
-                                  backgroundImage: const AssetImage(
-                                    AssetManager.avatar,
-                                  ),
-                                ),
-                          const SizedBox(height: 10),
-                          Text(
-                            user.displayName ?? 'Shop Admin',
-                            style: getMediumStyle(color: accentColor),
-                          )
-                        ],
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                       extended: isExtended,
                       selectedIconTheme: const IconThemeData(
