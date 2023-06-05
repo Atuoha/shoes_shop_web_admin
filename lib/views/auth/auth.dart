@@ -25,8 +25,8 @@ class AuthenticationScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   action == AuthAction.signIn
-                      ? 'Welcome to ShoeShop! Please sign in to continue.'
-                      : 'Welcome to ShoeShop! Please create an account to continue',
+                      ? 'Welcome back to ShoesShop! Please sign in to continue.'
+                      : 'Welcome to ShoesShop! Please create an account to continue',
                 ),
               );
             },
@@ -42,10 +42,7 @@ class AuthenticationScreen extends StatelessWidget {
             sideBuilder: (context, constraints) {
               return Padding(
                 padding: const EdgeInsets.all(20),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Image.asset(AssetManager.logo, width: 100),
-                ),
+                child: Image.asset(AssetManager.logoTransparent, width: 100),
               );
             },
             providers: [
