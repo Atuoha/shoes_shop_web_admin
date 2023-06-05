@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/main/users/users.dart';
 import '../../controllers/route_manager.dart';
+import '../widgets/loading_widget.dart';
 import 'products/products.dart';
 import 'vendors/vendors.dart';
 import '../../resources/assets_manager.dart';
@@ -29,6 +31,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   var _pageIndex = 0;
   bool isExtended = false;
+  bool isLoading = true;
+
+  final user = FirebaseAuth.instance.currentUser!;
+
   final List<Widget> _pages = const [
     HomeScreen(),
     ProductScreen(),
@@ -51,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
     if (widget.index != 0) {
       setNewPage(widget.index);
     }
+
     super.initState();
   }
 
@@ -157,15 +164,22 @@ class _MainScreenState extends State<MainScreen> {
                       labelType: NavigationRailLabelType.none,
                       leading: Column(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: accentColor.withOpacity(0.2),
-                            backgroundImage: const AssetImage(
-                              AssetManager.avatar,
-                            ),
-                          ),
+                          user.photoURL != null
+                              ? CircleAvatar(
+                                  backgroundColor: accentColor.withOpacity(0.2),
+                                  backgroundImage: NetworkImage(
+                                    user.photoURL!,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: accentColor.withOpacity(0.2),
+                                  backgroundImage: const AssetImage(
+                                    AssetManager.avatar,
+                                  ),
+                                ),
                           const SizedBox(height: 10),
                           Text(
-                            'Leo Philip',
+                            user.displayName ?? 'Shop Admin',
                             style: getMediumStyle(color: accentColor),
                           )
                         ],
