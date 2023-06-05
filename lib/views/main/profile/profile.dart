@@ -32,6 +32,7 @@ class ProfileScreen extends StatelessWidget {
             flexibleSpace: LayoutBuilder(
               builder: (context, constraint) {
                 return FlexibleSpaceBar(
+                  centerTitle: true,
                   title: AnimatedOpacity(
                     opacity: constraint.biggest.height <= 120 ? 1 : 0,
                     duration: const Duration(
@@ -265,6 +266,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height:20),
                   ],
                 ),
               ),
