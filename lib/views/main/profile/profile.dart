@@ -25,9 +25,8 @@ class ProfileScreen extends StatelessWidget {
               onPressed: () => Navigator.of(context).pop(),
             ),
             expandedHeight: 130,
-            floating: true,
+            // floating: true,
             pinned: true,
-            snap: false,
             elevation: 0,
             flexibleSpace: LayoutBuilder(
               builder: (context, constraint) {
@@ -148,7 +147,7 @@ class ProfileScreen extends StatelessWidget {
                                 child: Text(
                                   'Cash outs',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 22,
                                     color: dashGrey,
                                   ),
@@ -172,7 +171,7 @@ class ProfileScreen extends StatelessWidget {
                                 child: const Text(
                                   'Orders',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 22,
                                     color: Colors.white,
                                   ),
@@ -196,7 +195,7 @@ class ProfileScreen extends StatelessWidget {
                                 child: Text(
                                   'Vendors',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w500,
                                     fontSize: 22,
                                     color: dashGrey,
                                   ),
@@ -229,6 +228,10 @@ class ProfileScreen extends StatelessWidget {
                             title: 'Phone Number',
                             subtitle: user.phoneNumber ?? "",
                             icon: Icons.phone,
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Divider(thickness: 1),
                           ),
                           KListTile(
                             title: 'App Settings',
@@ -269,7 +272,7 @@ class ProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),

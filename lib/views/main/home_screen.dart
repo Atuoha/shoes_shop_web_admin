@@ -6,6 +6,7 @@ import '../../models/app_data.dart';
 import '../../resources/font_manager.dart';
 import '../components/app_data_graph.dart';
 import '../components/category_pie_data.dart';
+import '../widgets/build_dashboard_container.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,74 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
       AppData('Categories', 40)
     ];
 
-    // single gridView Item
-    Widget buildDashboardItem({
-      required String title,
-      required int value,
-      required Color color,
-      required IconData icon,
-      required int index,
-    }) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FittedBox(
-                        child: Text(
-                          title,
-                          style: getMediumStyle(
-                            fontSize: FontSize.s16,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 3.0),
-                      Text(
-                        value.toString(),
-                        style: getBoldStyle(
-                          fontSize: FontSize.s30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(icon, color: accentColor),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8.0),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => MainScreen(index: index),
-                  ),
-                ),
-                child: Text(
-                  'view more',
-                  style: getRegularStyle(color: accentColor),
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }
+
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -124,42 +58,42 @@ class _HomeScreenState extends State<HomeScreen> {
                     shrinkWrap: true,
                     crossAxisCount: crossAxisCount,
                     children: [
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Orders',
                         value: 10,
                         color: dashBlue,
                         icon: Icons.shopping_cart_checkout,
                         index: 2,
                       ),
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Cash Outs',
                         value: 15,
                         color: dashGrey,
                         icon: Icons.monetization_on,
                         index: 6,
                       ),
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Products',
                         value: 8,
                         color: dashOrange,
                         icon: Icons.shopping_bag,
                         index: 1,
                       ),
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Vendors',
                         value: 5,
                         color: dashPurple,
                         icon: Icons.group,
                         index: 3,
                       ),
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Categories',
                         value: 12,
                         color: dashRed,
                         icon: Icons.category_outlined,
                         index: 5,
                       ),
-                      buildDashboardItem(
+                      BuildDashboardContainer(
                         title: 'Users',
                         value: 20,
                         color: dashTeal,
