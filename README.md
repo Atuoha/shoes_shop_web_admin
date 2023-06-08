@@ -1,6 +1,7 @@
 # shoes_shop
 
 Building multivendor store for sneakers with web admin.
+Use flutter run --web-renderer html or flutter build web --release --web-renderer html
 
 The store app has two sections
 1. User
