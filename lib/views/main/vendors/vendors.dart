@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 
@@ -6,6 +7,7 @@ import '../../../constants/color.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
+import '../../widgets/kcool_alert.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 
@@ -20,10 +22,23 @@ class _VendorsScreenState extends State<VendorsScreen> {
   final Stream<QuerySnapshot> stream =
       FirebaseFirestore.instance.collection('vendors').snapshots();
 
+  doneWithAction() {
+    Navigator.of(context).pop();
+  }
+
+  // return context
+  get cxt => context;
+
   // toggle approval
   Future<void> toggleApproval(String docId, bool value) async {
     await FirebaseFirestore.instance.collection('vendors').doc(docId).update(
       {'isApproved': !value},
+    );
+    kCoolAlert(
+      message: 'You have successfully set the approval to ${!value}',
+      context: cxt,
+      alert: CoolAlertType.success,
+      action: doneWithAction,
     );
   }
 
@@ -41,6 +56,13 @@ class _VendorsScreenState extends State<VendorsScreen> {
   // delete store
   Future<void> deleteStore(String docId) async {
     await FirebaseFirestore.instance.collection('vendors').doc(docId).delete();
+
+    kCoolAlert(
+      message: 'You have successfully set the deleted store',
+      context: cxt,
+      alert: CoolAlertType.success,
+      action: doneWithAction,
+    );
   }
 
   final _verticalScrollController = ScrollController();
