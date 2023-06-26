@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_shop_admin/views/components/scroll_component.dart';
 
 import '../../../constants/color.dart';
 import '../../../resources/assets_manager.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
+import '../../widgets/are_you_sure_dialog.dart';
 import '../../widgets/loading_widget.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -18,22 +20,42 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Stream<QuerySnapshot> ordersStream =
       FirebaseFirestore.instance.collection('orders').snapshots();
 
+  final _verticalScrollController = ScrollController();
+  final _horizontalScrollController = ScrollController();
+
+  String customerName = '';
+  String storeName = '';
+
   // get customer fullname
-  Future<String> getCustomerName(String customerId) async {
-    String customerName = '';
-    await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(customerId)
-        .get()
-        .then(
-          (DocumentSnapshot doc) => customerName = doc['fullname'],
-        );
-    return customerName;
+  FutureBuilder<String> getCustomerName(String customerId) {
+    return FutureBuilder<String>(
+      future: FirebaseFirestore.instance
+          .collection('customers')
+          .doc(customerId)
+          .get()
+          .then(
+            (DocumentSnapshot doc) => customerName = doc['fullname'],
+          ),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error occurred!');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            ErrorWidget.builder = (FlutterErrorDetails details) => const Center(
+                  child: LoadingWidget(),
+                );
+          }
+        }
+
+        return Text(snapshot.data ?? '');
+      },
+    );
   }
 
   // get vendor store name
   Future<String> getVendorName(String vendorId) async {
-    String storeName = '';
     await FirebaseFirestore.instance
         .collection('vendors')
         .doc(vendorId)
@@ -41,6 +63,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         .then(
           (DocumentSnapshot doc) => storeName = doc['storeName'],
         );
+
     return storeName;
   }
 
@@ -55,6 +78,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
       {
         'isApproved': !status,
       },
+    );
+  }
+
+  void deleteDialog(String id) {
+    areYouSureDialog(
+      title: 'Delete order',
+      content: 'Are you sure you want to delete order?',
+      context: context,
+      action: deleteOrder,
+      isIdInvolved: true,
+      id: id,
     );
   }
 
@@ -81,6 +115,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           ),
           const SizedBox(height: 10),
           StreamBuilder<QuerySnapshot>(
+            stream: ordersStream,
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
                 const Center(
@@ -107,30 +142,93 @@ class _OrdersScreenState extends State<OrdersScreen> {
                 );
               }
 
-              return DataTable(
-                showBottomBorder: true,
-                headingRowColor:
-                    MaterialStateColor.resolveWith((states) => primaryColor),
-                headingTextStyle: const TextStyle(color: Colors.white),
-                dataRowHeight: 60,
-                columns: const [
-                  DataColumn(label: Text('Customer Name')),
-                  DataColumn(label: Text('Vendor Name')),
-                  DataColumn(label: Text('Product Image')),
-                  DataColumn(label: Text('Price')),
-                  DataColumn(label: Text('Quantity')),
-                  DataColumn(label: Text('Product Size')),
-                  DataColumn(label: Text('Action')),
-                  DataColumn(label: Text('Action')),
-                ],
-                rows: snapshot.data!.docs
-                    .map(
-                      (item) => DataRow(
+              return ScrollComponent(
+                horizontalScrollController: _horizontalScrollController,
+                verticalScrollController: _verticalScrollController,
+                child: DataTable(
+                  showBottomBorder: true,
+                  headingRowColor:
+                      MaterialStateColor.resolveWith((states) => primaryColor),
+                  headingTextStyle: const TextStyle(color: Colors.white),
+                  dataRowHeight: 60,
+                  columns: const [
+                    DataColumn(label: Text('Customer Name')),
+                    DataColumn(label: Text('Vendor Name')),
+                    DataColumn(label: Text('Product Image')),
+                    DataColumn(label: Text('Product Name')),
+                    DataColumn(label: Text('Price')),
+                    DataColumn(label: Text('Quantity')),
+                    DataColumn(label: Text('Product Size')),
+                    DataColumn(label: Text('Action')),
+                    DataColumn(label: Text('Action')),
+                  ],
+                  rows: snapshot.data!.docs.map(
+                    (item) {
+                      return DataRow(
                         cells: [
-                          DataCell(Text(
-                              getCustomerName(item['customerId']) as String)),
                           DataCell(
-                              Text(getVendorName(item['vendorId']) as String)),
+                            FutureBuilder<String>(
+                              future: FirebaseFirestore.instance
+                                  .collection('customers')
+                                  .doc(item['customerId'])
+                                  .get()
+                                  .then(
+                                    (DocumentSnapshot doc) => doc['fullname'],
+                                  ),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('Error occurred!');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  if (!snapshot.hasData ||
+                                      snapshot.data == null) {
+                                    ErrorWidget.builder =
+                                        (FlutterErrorDetails details) =>
+                                            const Center(
+                                              child: LoadingWidget(),
+                                            );
+                                  }
+                                }
+
+                                return Text(snapshot.data ?? '');
+                              },
+                            ),
+                          ),
+
+                          //vendor
+                          DataCell(
+                            FutureBuilder<String>(
+                              future: FirebaseFirestore.instance
+                                  .collection('vendors')
+                                  .doc(item['vendorId'])
+                                  .get()
+                                  .then(
+                                    (DocumentSnapshot doc) => doc['storeName'],
+                                  ),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Text('Error occurred!');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  if (!snapshot.hasData ||
+                                      snapshot.data == null) {
+                                    ErrorWidget.builder =
+                                        (FlutterErrorDetails details) =>
+                                            const Center(
+                                              child: LoadingWidget(),
+                                            );
+                                  }
+                                }
+
+                                return Text(snapshot.data ?? '');
+                              },
+                            ),
+                          ),
+
                           DataCell(
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -140,17 +238,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               ),
                             ),
                           ),
+                          DataCell(Text('${item['prodName']}')),
                           DataCell(Text('\$${item['prodPrice']}')),
-                          DataCell(Text('${item['quantity']}')),
+                          DataCell(Text('${item['prodQuantity']}')),
                           DataCell(Text('${item['prodSize']}')),
                           DataCell(
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  backgroundColor: item['isApproved']
-                                      ? accentColor
-                                      : primaryColor),
+                                backgroundColor: item['isApproved']
+                                    ? primaryColor
+                                    : accentColor,
+                              ),
                               onPressed: () => toggleApproval(
-                                item['prodId'],
+                                item['orderId'],
                                 item['isApproved'],
                               ),
                               child: Text(
@@ -160,14 +260,15 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           ),
                           DataCell(
                             ElevatedButton(
-                              onPressed: () => deleteOrder(item['orderId']),
+                              onPressed: () => deleteDialog(item['orderId']),
                               child: const Text('Delete'),
                             ),
                           ),
                         ],
-                      ),
-                    )
-                    .toList(),
+                      );
+                    },
+                  ).toList(),
+                ),
               );
             },
           )

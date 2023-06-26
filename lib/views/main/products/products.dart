@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/models/product.dart';
 import 'package:shoes_shop_admin/resources/assets_manager.dart';
+import 'package:shoes_shop_admin/views/widgets/are_you_sure_dialog.dart';
 
 import '../../../constants/color.dart';
 import '../../../resources/font_manager.dart';
@@ -36,6 +37,17 @@ class _ProductScreenState extends State<ProductScreen> {
   // delete Product
   Future<void> deleteProduct(String id) async {
     await FirebaseFirestore.instance.collection('products').doc(id).delete();
+  }
+
+  void deleteDialog(String id) {
+    areYouSureDialog(
+      title: 'Delete product',
+      content: 'Are you sure you want to delete product?',
+      context: context,
+      action: deleteProduct,
+      isIdInvolved: true,
+      id: id,
+    );
   }
 
   // navigate to single product
@@ -151,8 +163,9 @@ class _ProductScreenState extends State<ProductScreen> {
                             DataCell(
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: item['isApproved'] ? accentColor: primaryColor
-                                ),
+                                    backgroundColor: item['isApproved']
+                                        ? primaryColor
+                                        : accentColor),
                                 onPressed: () => toggleApproval(
                                   item['prodId'],
                                   item['isApproved'],
@@ -164,7 +177,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             ),
                             DataCell(
                               ElevatedButton(
-                                onPressed: () => deleteProduct(item['prodId']),
+                                onPressed: () => deleteDialog(item['prodId']),
                                 child: const Text('Delete'),
                               ),
                             ),
