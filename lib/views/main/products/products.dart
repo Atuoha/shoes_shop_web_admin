@@ -9,6 +9,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/scroll_component.dart';
 import '../../widgets/loading_widget.dart';
+import 'package:intl/intl.dart' as intl;
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -136,6 +137,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     DataColumn(label: Text('Product Image')),
                     DataColumn(label: Text('Product Price')),
                     DataColumn(label: Text('Product Quantity')),
+                    DataColumn(label: Text('Date')),
                     DataColumn(label: Text('Action')),
                     DataColumn(label: Text('Action')),
                     DataColumn(label: Text('View')),
@@ -161,11 +163,19 @@ class _ProductScreenState extends State<ProductScreen> {
                               ),
                             ),
                             DataCell(
+                              Text(
+                                intl.DateFormat.yMMMEd().format(
+                                  item['uploadDate'].toDate(),
+                                ),
+                              ),
+                            ),
+                            DataCell(
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: item['isApproved']
-                                        ? primaryColor
-                                        : accentColor),
+                                  backgroundColor: item['isApproved']
+                                      ? primaryColor
+                                      : accentColor,
+                                ),
                                 onPressed: () => toggleApproval(
                                   item['prodId'],
                                   item['isApproved'],

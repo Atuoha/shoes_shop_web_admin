@@ -55,6 +55,7 @@ dependencies:
   firebase_ui_auth: ^1.4.2
   firebase_ui_oauth_google: ^1.2.2
   adaptive_scrollbar: ^2.1.2
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../widgets/are_you_sure_dialog.dart';
 import '../../widgets/loading_widget.dart';
+import 'package:intl/intl.dart' as intl;
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -115,6 +116,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     DataColumn(label: Text('Price')),
                     DataColumn(label: Text('Quantity')),
                     DataColumn(label: Text('Product Size')),
+                    DataColumn(label: Text('Date')),
                     DataColumn(label: Text('Action')),
                     DataColumn(label: Text('Action')),
                   ],
@@ -199,6 +201,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           DataCell(Text('\$${item['prodPrice']}')),
                           DataCell(Text('${item['prodQuantity']}')),
                           DataCell(Text('${item['prodSize']}')),
+                          DataCell(
+                            Text(
+                              intl.DateFormat.yMMMEd().format(item['date'].toDate()),
+                            ),
+                          ),
                           DataCell(
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
