@@ -23,50 +23,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
   final _verticalScrollController = ScrollController();
   final _horizontalScrollController = ScrollController();
 
-  String customerName = '';
-  String storeName = '';
-
-  // get customer fullname
-  FutureBuilder<String> getCustomerName(String customerId) {
-    return FutureBuilder<String>(
-      future: FirebaseFirestore.instance
-          .collection('customers')
-          .doc(customerId)
-          .get()
-          .then(
-            (DocumentSnapshot doc) => customerName = doc['fullname'],
-          ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Error occurred!');
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            ErrorWidget.builder = (FlutterErrorDetails details) => const Center(
-                  child: LoadingWidget(),
-                );
-          }
-        }
-
-        return Text(snapshot.data ?? '');
-      },
-    );
-  }
-
-  // get vendor store name
-  Future<String> getVendorName(String vendorId) async {
-    await FirebaseFirestore.instance
-        .collection('vendors')
-        .doc(vendorId)
-        .get()
-        .then(
-          (DocumentSnapshot doc) => storeName = doc['storeName'],
-        );
-
-    return storeName;
-  }
-
   // delete order
   Future<void> deleteOrder(String id) async {
     await FirebaseFirestore.instance.collection('orders').doc(id).delete();
@@ -166,6 +122,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     (item) {
                       return DataRow(
                         cells: [
+                          // customer
                           DataCell(
                             FutureBuilder<String>(
                               future: FirebaseFirestore.instance
