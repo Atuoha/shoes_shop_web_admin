@@ -30,12 +30,47 @@ class _CashOutScreenState extends State<CashOutScreen> {
   }
 
   // toggle order approval
-  Future<void> toggleApproval(String id, bool status) async {
+  Future<void> toggleApproval(
+    String id,
+    bool status,
+    double amount,
+    String vendorId,
+  ) async {
     await FirebaseFirestore.instance.collection('cash_outs').doc(id).update(
       {
         'status': !status,
       },
-    );
+    ).whenComplete(() async {
+      if (status) {
+        // incrementing vendor's balance with amount
+        FirebaseFirestore.instance
+            .collection('vendors')
+            .doc(vendorId)
+            .get()
+            .then((DocumentSnapshot data) {
+          FirebaseFirestore.instance
+              .collection('vendors')
+              .doc(vendorId)
+              .update({
+            'balanceAvailable': data['balanceAvailable'] + amount,
+          });
+        });
+      } else {
+        // decrementing vendor's balance by balance
+        FirebaseFirestore.instance
+            .collection('vendors')
+            .doc(vendorId)
+            .get()
+            .then((DocumentSnapshot data) {
+          FirebaseFirestore.instance
+              .collection('vendors')
+              .doc(vendorId)
+              .update({
+            'balanceAvailable': data['balanceAvailable'] - amount,
+          });
+        });
+      }
+    });
   }
 
   void deleteDialog(String id) {
@@ -156,21 +191,20 @@ class _CashOutScreenState extends State<CashOutScreen> {
                             Text(
                               intl.DateFormat.yMMMEd().format(
                                 item['date'].toDate(),
-                              )
-                             ,
+                              ),
                             ),
                           ),
                           DataCell(
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: item['status']
-                                    ? primaryColor
-                                    : accentColor,
+                                backgroundColor:
+                                    item['status'] ? primaryColor : accentColor,
                               ),
                               onPressed: () => toggleApproval(
-                                item['id'],
-                                item['status'],
-                              ),
+                                  item['id'],
+                                  item['status'],
+                                  item['amount'],
+                                  item['vendorId']),
                               child: Text(
                                 item['status'] ? 'Reject' : 'Approve',
                               ),
