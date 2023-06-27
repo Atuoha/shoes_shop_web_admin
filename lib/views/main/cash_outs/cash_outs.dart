@@ -36,6 +36,9 @@ class _CashOutScreenState extends State<CashOutScreen> {
 
   // delete order
   Future<void> deleteCashOut(String id) async {
+    //pop out
+    doneWithAction();
+
     await FirebaseFirestore.instance.collection('cash_outs').doc(id).delete().whenComplete(() {
       kCoolAlert(
         message: 'You have successfully set the deleted cash out',
@@ -44,6 +47,8 @@ class _CashOutScreenState extends State<CashOutScreen> {
         action: doneWithAction,
       );
     });
+
+
   }
 
   // delete dialog

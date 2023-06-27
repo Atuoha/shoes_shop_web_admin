@@ -47,6 +47,9 @@ class _ProductScreenState extends State<ProductScreen> {
 
   // delete Product
   Future<void> deleteProduct(String id) async {
+    //pop out
+    doneWithAction();
+
     await FirebaseFirestore.instance.collection('products').doc(id).delete().whenComplete(() {
       kCoolAlert(
         message: 'You have successfully set the deleted product',
@@ -55,6 +58,8 @@ class _ProductScreenState extends State<ProductScreen> {
         action: doneWithAction,
       );
     });
+
+
   }
 
   // delete dialog

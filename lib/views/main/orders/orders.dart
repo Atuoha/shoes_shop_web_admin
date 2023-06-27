@@ -36,6 +36,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   // delete order
   Future<void> deleteOrder(String id) async {
+
+    //pop out
+    doneWithAction();
+
     await FirebaseFirestore.instance.collection('orders').doc(id).delete().whenComplete(() {
       kCoolAlert(
         message: 'You have successfully set the deleted order',
@@ -44,6 +48,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         action: doneWithAction,
       );
     });
+
   }
 
   // toggle order approval

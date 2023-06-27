@@ -36,13 +36,16 @@ class _UsersScreenState extends State<UsersScreen> {
 
   // delete order
   Future<void> deleteCustomer(String id) async {
+    //pop out
+    doneWithAction();
+
     await FirebaseFirestore.instance
         .collection('customers')
         .doc(id)
         .delete()
         .whenComplete(() {
       kCoolAlert(
-        message: 'You have successfully set the deleted cash out',
+        message: 'You have successfully set the deleted user',
         context: cxt,
         alert: CoolAlertType.success,
         action: doneWithAction,
