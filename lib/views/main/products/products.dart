@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_shop_admin/models/product.dart';
 import 'package:shoes_shop_admin/resources/assets_manager.dart';
@@ -8,6 +9,7 @@ import '../../../constants/color.dart';
 import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/scroll_component.dart';
+import '../../widgets/kcool_alert.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -35,11 +37,27 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  // delete Product
-  Future<void> deleteProduct(String id) async {
-    await FirebaseFirestore.instance.collection('products').doc(id).delete();
+  // called after alert for dismissal
+  doneWithAction() {
+    Navigator.of(context).pop();
   }
 
+  // return context
+  get cxt => context;
+
+  // delete Product
+  Future<void> deleteProduct(String id) async {
+    await FirebaseFirestore.instance.collection('products').doc(id).delete().whenComplete(() {
+      kCoolAlert(
+        message: 'You have successfully set the deleted product',
+        context: cxt,
+        alert: CoolAlertType.success,
+        action: doneWithAction,
+      );
+    });
+  }
+
+  // delete dialog
   void deleteDialog(String id) {
     areYouSureDialog(
       title: 'Delete product',

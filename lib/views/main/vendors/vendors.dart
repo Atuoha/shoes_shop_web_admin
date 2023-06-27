@@ -23,6 +23,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
   final Stream<QuerySnapshot> stream =
       FirebaseFirestore.instance.collection('vendors').snapshots();
 
+  // called after alert for dismissal
   doneWithAction() {
     Navigator.of(context).pop();
   }
@@ -43,6 +44,7 @@ class _VendorsScreenState extends State<VendorsScreen> {
     );
   }
 
+  // delete dialog
   deleteStoreDialog(String docId, String storeName) {
     areYouSureDialog(
       title: 'Delete $storeName',

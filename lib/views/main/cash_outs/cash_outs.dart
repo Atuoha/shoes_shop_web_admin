@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/color.dart';
@@ -7,6 +8,7 @@ import '../../../resources/font_manager.dart';
 import '../../../resources/styles_manager.dart';
 import '../../components/scroll_component.dart';
 import '../../widgets/are_you_sure_dialog.dart';
+import '../../widgets/kcool_alert.dart';
 import '../../widgets/loading_widget.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -24,10 +26,38 @@ class _CashOutScreenState extends State<CashOutScreen> {
   final _verticalScrollController = ScrollController();
   final _horizontalScrollController = ScrollController();
 
-  // delete order
-  Future<void> deleteOrder(String id) async {
-    await FirebaseFirestore.instance.collection('cash_outs').doc(id).delete();
+  // called after alert for dismissal
+  doneWithAction() {
+    Navigator.of(context).pop();
   }
+
+  // return context
+  get cxt => context;
+
+  // delete order
+  Future<void> deleteCashOut(String id) async {
+    await FirebaseFirestore.instance.collection('cash_outs').doc(id).delete().whenComplete(() {
+      kCoolAlert(
+        message: 'You have successfully set the deleted cash out',
+        context: cxt,
+        alert: CoolAlertType.success,
+        action: doneWithAction,
+      );
+    });
+  }
+
+  // delete dialog
+  void deleteDialog(String id) {
+    areYouSureDialog(
+      title: 'Delete cash out',
+      content: 'Are you sure you want to delete cash out?',
+      context: context,
+      action: deleteCashOut,
+      isIdInvolved: true,
+      id: id,
+    );
+  }
+
 
   // toggle order approval
   Future<void> toggleApproval(
@@ -71,17 +101,6 @@ class _CashOutScreenState extends State<CashOutScreen> {
         });
       }
     });
-  }
-
-  void deleteDialog(String id) {
-    areYouSureDialog(
-      title: 'Delete cash out',
-      content: 'Are you sure you want to delete cash out?',
-      context: context,
-      action: deleteOrder,
-      isIdInvolved: true,
-      id: id,
-    );
   }
 
   @override
