@@ -7,7 +7,10 @@ import '../../models/chart_sample.dart';
 class CategoryDataPie extends StatelessWidget {
   const CategoryDataPie({
     super.key,
+    required this.chartSampleData,
   });
+
+  final List<ChartSampleData> chartSampleData;
 
   @override
   Widget build(BuildContext context) {
@@ -19,35 +22,31 @@ class CategoryDataPie extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        child: _buildDefaultPieChart(),
+        child: _buildDefaultPieChart(chartSampleData),
       ),
     );
   }
 }
 
 /// Returns the circular  chart with pie series.
-SfCircularChart _buildDefaultPieChart() {
+SfCircularChart _buildDefaultPieChart(List<ChartSampleData> chartSampleData) {
   return SfCircularChart(
     title: ChartTitle(text: 'Categories with Products Quantity'),
     legend: Legend(isVisible: true),
-    series: _getDefaultPieSeries(),
+    series: _getDefaultPieSeries(chartSampleData),
   );
 }
 
 /// Returns the pie series.
-List<PieSeries<ChartSampleData, String>> _getDefaultPieSeries() {
+List<PieSeries<ChartSampleData, String>> _getDefaultPieSeries(List<ChartSampleData> chartSampleData) {
   return <PieSeries<ChartSampleData, String>>[
     PieSeries<ChartSampleData, String>(
       explode: true,
       explodeIndex: 0,
       explodeOffset: '10%',
-      dataSource: <ChartSampleData>[
-        ChartSampleData(x: 'Fila', y: 13, text: 'Fila \n 13%'),
-        ChartSampleData(x: 'Adidas', y: 24, text: 'Adidas \n 24%'),
-        ChartSampleData(x: 'Puma', y: 25, text: 'Puma \n 25%'),
-        ChartSampleData(x: 'Nike', y: 38, text: 'Nike \n 38%'),
-        ChartSampleData(x: 'Reebok', y: 28, text: 'Reebok \n 38%'),
-      ],
+      dataSource: chartSampleData
+
+      ,
       xValueMapper: (ChartSampleData data, _) => data.x,
       yValueMapper: (ChartSampleData data, _) => data.y,
       dataLabelMapper: (ChartSampleData data, _) => data.text,
@@ -57,3 +56,5 @@ List<PieSeries<ChartSampleData, String>> _getDefaultPieSeries() {
     ),
   ];
 }
+
+

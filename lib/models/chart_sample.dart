@@ -1,6 +1,6 @@
 class ChartSampleData {
   final String x;
-  final int y;
+  final num y;
   final String text;
 
   ChartSampleData({
